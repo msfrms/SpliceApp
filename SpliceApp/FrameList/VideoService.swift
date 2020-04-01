@@ -13,8 +13,7 @@ public protocol VideoService {
 
     var videoDurationInSeconds: Double { get }
 
-    func frame(from time: CMTime) -> Result<UIImage, Error>
-    func frames(from range: Range<Int>) -> [UIImage?]
+    func frame(from time: CMTime) -> Result<UIImage, Error>    
 }
 
 public class VideoServiceImpl: VideoService {

@@ -26,9 +26,13 @@ public class FrameListPresenter {
                 render(.empty(error.localizedDescription))
 
             case .success(let batch):
-                let frames = batch.frames.map { FrameView.Props(image: $0, onTap: .nop) }.nonEmptyArray
+                let framesOptional = batch.frames.map { FrameView.Props(image: $0, onTap: .nop) }.nonEmptyArray
+                guard let frames = framesOptional else {
+                    render(.empty("Не удалось загрузить видео файл"))
+                    return
+                }
                 let props: FrameListViewController.Props = .content(FrameListViewController.Props.Content(
-                    frames: frames!,
+                    frames: frames,
                     onLastFrameScrolled: batch.isEnd ? nil : Command { self.interactor.nextFrame() }))
                 render(props)
             }

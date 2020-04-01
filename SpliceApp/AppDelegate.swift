@@ -9,7 +9,7 @@
 import UIKit
 
 func create() -> VideoService {
-    let url = Bundle.main.path(forResource: "Funny Cartoon1", ofType: "mp4") ?? ""
+    let url = Bundle.main.path(forResource: "Funny Cartoon", ofType: "mp4") ?? ""
     return VideoServiceImpl(url: URL(fileURLWithPath: url))
 }
 
