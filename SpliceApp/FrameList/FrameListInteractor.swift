@@ -89,14 +89,16 @@ public class FrameListInteractorImpl: FrameListInteractor {
 
         let prevTime = Int(state.timeInSeconds)
 
-        self.state = FrameListDispatcher.reduce(
-            prev: self.state,
+        state = FrameListDispatcher.reduce(
+            prev: state,
             action: .nextFramesLoading,
             batchSize: Const.batchSize,
-            videoDuration: self.videoDuration)
+            videoDuration: videoDuration)
 
-        DispatchQueue.global().async {
-
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {
+                return
+            }
             let frames: [UIImage?] = (prevTime...Int(self.state.timeInSeconds))
                 .map { sec in
                     let result = self.videoService.frame(from: CMTimeMakeWithSeconds(Double(prevTime) + Double(sec), preferredTimescale: 60))
@@ -111,7 +113,10 @@ public class FrameListInteractorImpl: FrameListInteractor {
                     }
                 }
 
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
 
                 self.state = FrameListDispatcher.reduce(
                     prev: self.state,
